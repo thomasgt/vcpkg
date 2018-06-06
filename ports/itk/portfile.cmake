@@ -8,6 +8,8 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+# remove old source dir so RENAME doesn't fail
+file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/ITK)
 # directory path length needs to be shorter than 50 characters
 file(RENAME ${SOURCE_PATH} ${CURRENT_BUILDTREES_DIR}/ITK)
 set(SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/ITK")
@@ -22,30 +24,11 @@ vcpkg_configure_cmake(
         -DITK_INSTALL_DATA_DIR=share/itk/data
         -DITK_INSTALL_DOC_DIR=share/itk/doc
         -DITK_INSTALL_PACKAGE_DIR=share/itk
-        -DITK_LEGACY_REMOVE=ON
-        -DITK_FUTURE_LEGACY_REMOVE=ON
-        -DITK_USE_64BITS_IDS=ON
-        -DITK_USE_CONCEPT_CHECKING=ON
-        #-DITK_USE_SYSTEM_LIBRARIES=ON # enables USE_SYSTEM for all third party libraries, some of which do not have vcpkg ports such as CastXML, SWIG, MINC etc
-        -DITK_USE_SYSTEM_DOUBLECONVERSION=ON
-        -DITK_USE_SYSTEM_EXPAT=ON
-        -DITK_USE_SYSTEM_JPEG=ON
-        -DITK_USE_SYSTEM_PNG=ON
-        -DITK_USE_SYSTEM_TIFF=ON
-        -DITK_USE_SYSTEM_ZLIB=ON
-        -DITK_FORBID_DOWNLOADS=OFF
-
-        # I havn't tried Python wrapping in vcpkg
-        #-DITK_WRAP_PYTHON=ON
-        #-DITK_PYTHON_VERSION=3
-
-        # HDF5 must NOT be installed, otherwise it causes: ...\installed\x64-windows-static\include\H5Tpkg.h(25): fatal error C1189: #error:  "Do not include this file outside the H5T package!"
-        -DITK_USE_SYSTEM_HDF5=OFF # if ON, causes: ...\buildtrees\itk\x64-windows-static-rel\Modules\ThirdParty\HDF5\src\itk_H5Cpp.h(25): fatal error C1083: Cannot open include file: 'H5Cpp.h': No such file or directory
-
-        # -DModule_ITKVtkGlue=ON # this option requires VTK to be a dependency in CONTROL file. VTK depends on HDF5!
-        -DModule_IOSTL=ON # example how to turn on a non-default module
-        -DModule_MorphologicalContourInterpolation=ON # example how to turn on a remote module
-        -DModule_RLEImage=ON # example how to turn on a remote module
+        -DBUILD_SHARED_LIBS=ON
+        -DITKV3_COMPATIBILITY=ON
+        -DITK_BUILD_DEFAULT_MODULES=ON
+        -DCMAKE_POSITION_INDEPENDENT_CODE=ON
+        -DCMAKE_DEBUG_POSTFIX:string=d
         ${ADDITIONAL_OPTIONS}
 )
 

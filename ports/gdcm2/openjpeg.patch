@@ -1,0 +1,11 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -372,7 +372,7 @@ else()
+ endif()
+ 
+ if(GDCM_USE_SYSTEM_OPENJPEG)
+-  find_package(OpenJPEG 2.0.0 REQUIRED)
++  find_package(OpenJPEG 2.0.0 CONFIG REQUIRED)
+   set(GDCM_OPENJPEG_LIBRARIES ${OPENJPEG_LIBRARIES})
+ else()
+   set(GDCM_OPENJPEG_LIBRARIES gdcmopenjp2)
